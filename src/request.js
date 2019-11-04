@@ -15,7 +15,7 @@ const accessRoles = require('./auth/access-roles');
  */
 function Request(config, path) {
   this.path = config.get('API_PATH') + (path || '');
-  this.credentials = new Credentials(conf);
+  this.credentials = new Credentials(config);
 }
 
 /**
