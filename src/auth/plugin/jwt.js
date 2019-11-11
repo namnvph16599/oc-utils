@@ -7,7 +7,6 @@ const hapiLogger = require('../../logging/hapi-logger');
 
 const accessRoles = require('../access-roles');
 const accessRolesList = _.values(accessRoles);
-const emptyAccessRole = accessRoles.salesPartner;
 const Credentials = require('../credentials');
 const TokenManager = require('../token-manager');
 
@@ -60,9 +59,6 @@ function JWT(config) {
    * @private
    */
   async function _validateToken(credentials, request) {
-    if (!credentials.role) {
-      credentials.role = emptyAccessRole;
-    }
     // Super user got full access
     if (self.isSuperUser(credentials)) {
       return { isValid: true, credentials };

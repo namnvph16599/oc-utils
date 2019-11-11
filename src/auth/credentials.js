@@ -5,7 +5,6 @@ const TokenIssuer = require('./token-issuer');
 const tokenIssuer = new TokenIssuer();
 
 const accessRoles = require('./access-roles');
-const emptyAccessRole = accessRoles.salesPartner;
 
 function Credentials(config) {
   const self = this;
@@ -44,9 +43,6 @@ function Credentials(config) {
    * @returns {*}
    */
   this.getSecret = (role, direction = 'transfer') => {
-    if (!role) {
-      role = emptyAccessRole;
-    }
     const token = _.get(self.secrets, role);
     return _.get(token, direction, token);
   };

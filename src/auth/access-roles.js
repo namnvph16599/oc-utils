@@ -4,4 +4,5 @@ module.exports = {
   user: 'user',
   admin: 'admin',
   superUser: 'superUser',
+  visitor: 'visitor'
 };
