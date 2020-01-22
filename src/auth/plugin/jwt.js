@@ -23,6 +23,7 @@ function JWT(config) {
       key: _getKey,
       verifyOptions: { algorithms: ['HS256'] },
       validate: _validateToken,
+      cookieKey: 'authToken',
     };
     server.ext('onPreHandler', self.requestValidation);
     server.ext('onPreResponse', self.responseValidation);
