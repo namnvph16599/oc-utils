@@ -1,5 +1,3 @@
-'use strict';
-
 const jsonWebToken = require('jsonwebtoken');
 
 function TokenIssuer(tokenSecret) {

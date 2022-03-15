@@ -1,5 +1,3 @@
-'use strict';
-
 const Auth = {};
 
 Auth.accessRoles = require('./access-roles');

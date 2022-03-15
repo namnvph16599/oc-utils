@@ -1,5 +1,3 @@
-'use strict';
-
 const redis = require('redis');
 const bluebird = require('bluebird');
 const hapiLogger = require('./logging/hapi-logger');
@@ -19,9 +17,11 @@ class Redis {
       hapiLogger.log('error', 'Redis server error!', { error, redisUrl });
     });
   }
+
   get redisClient() {
     return this.client;
   }
+
   getUnionSet(setKeyList) {
     return new Promise((resolve, reject) => {
       this.client.sunion(setKeyList, (error, redisData) => {
@@ -32,6 +32,7 @@ class Redis {
       });
     });
   }
+
   getIntersectionSet(setKeyList) {
     return new Promise((resolve, reject) => {
       this.client.sinter(setKeyList, (error, redisData) => {
@@ -42,6 +43,7 @@ class Redis {
       });
     });
   }
+
   getDataFromSet(redisSetKeyList) {
     return new Promise((resolve, reject) => {
       const isInputArray = Array.isArray(redisSetKeyList);
@@ -63,6 +65,7 @@ class Redis {
       });
     });
   }
+
   getDataFromSortedSetByDate(redisSetKey, min, max) {
     return new Promise((resolve, reject) => {
       min = (min || min === 0) ? min : '-inf';
@@ -76,6 +79,7 @@ class Redis {
       });
     });
   }
+
   getDataFromSortedSet(redisSetKey) {
     return new Promise((resolve, reject) => {
       this.client.zrange(redisSetKey, 0, -1, (err, redisData) => {

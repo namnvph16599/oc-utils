@@ -1,8 +1,7 @@
-'use strict';
-
 const packageJson = require('../../package.json');
 const winston = require('winston');
 const _ = require('lodash');
+const { createWinstonCloudWatch } = require('./winston-cloudwatch');
 
 let loggerLevels = {
   error: 0,
@@ -12,9 +11,28 @@ let loggerLevels = {
   debug: 4,
 };
 
+const errorStackFormat = winston.format(info => {
+  if (info instanceof Error) {
+    return {
+      ...info,
+      stack: info.stack,
+      message: info.message,
+    };
+  }
+  ['error', 'err', 'e'].forEach(key => {
+    if (info[key] instanceof Error) {
+      info[key] = {
+        message: info[key].message,
+        stack: info[key].stack,
+      };
+    }
+  });
+  return info;
+});
+
 const defaultLogger = winston.createLogger({
-  format: winston.format.simple(),
-  transports: [new winston.transports.Console()]
+  format: winston.format.combine(errorStackFormat(), winston.format.simple()),
+  transports: [new winston.transports.Console()],
 });
 const nodeEnv = process.env.NODE_ENV;
 const loggerSettings = {
@@ -44,9 +62,18 @@ function register(server, options) {
       defaultLogger.add(transports[i], null, true);
     }
   }
+  if (loggerSettings.isLiveEnv) {
+    createWinstonCloudWatch(options)
+      .then(winstonCloudWatch => {
+        if (winstonCloudWatch) {
+          defaultLogger.add(winstonCloudWatch);
+        }
+      });
+  }
   isLoggerInitialized = true;
   server.events.on('log', onServerLog);
-  server.events.on({ name: 'request', channels: 'error' }, onServerError);
+  // this seems unnecessary since onRequestInternal also logs the same errors
+  // server.events.on({ name: 'request', channels: 'error' }, onServerError);
   server.events.on({ name: 'request', channels: 'app' }, onRequestLog);
   server.events.on({ name: 'request', channels: 'internal' }, onRequestInternal);
   if (options.logAllRequests) {
@@ -90,7 +117,7 @@ function onRequestInternal(request, event, tags) {
 // Events logged with server.log() and server events generated internally by Hapi
 function onServerLog(event, tags) {
   if (tags.error) {
-    const logMsg = typeof(event.data) === 'string' ? event.data : 'Server Error';
+    const logMsg = typeof (event.data) === 'string' ? event.data : 'Server Error';
     if (event.tags && event.tags.length > 0) {
       return defaultLogger.error(logMsg, event.tags);
     }
@@ -116,7 +143,7 @@ function getRequestMsg(logEvent) {
 
 function getMsgFromEvent(event) {
   let msg = '';
-  const typeOfData = typeof(event.data);
+  const typeOfData = typeof (event.data);
   if (typeOfData === 'string') {
     msg = event.data;
   } else if (typeOfData === 'object' && event.data.message) {
@@ -143,31 +170,23 @@ function getInternalErrorMessage(request, event, tags) {
   } else if (error) {
     message += JSON.stringify(error);
   }
-  message += `\npath: ${request.path}`;
+  message += `\npath: ${request.method} ${request.path}`;
   if (request.payload) {
     try {
-      const censoredPayload = _censorApiPayload(request.payload);
-      message += `\npayload: ${JSON.stringify(censoredPayload)}`;
+      message += `\npayload: ${JSON.stringify(request.payload)}`;
+    } catch (e) {
+      // continue regardless of error
+    }
+  }
+  if (request.query) {
+    try {
+      message += `\nquery: ${JSON.stringify(request.query)}`;
     } catch (e) {
       // continue regardless of error
     }
   }
   message += '\n';
   return message;
-}
-
-function _censorApiPayload(payload) {
-  if (!payload) {
-    return null;
-  }
-  const newPayload = _.cloneDeep(payload);
-  const fieldsToRemove = ['creditCard.number', 'card.number'];
-  fieldsToRemove.forEach(field => {
-    if (_.get(newPayload, field)) {
-      _.set(newPayload, field, null);
-    }
-  });
-  return newPayload;
 }
 
 function formatLogItem(item) {
@@ -184,11 +203,11 @@ function filterLogMeta(level, msg, meta) {
   return meta;
 }
 
-/* eslint-disable prefer-rest-params*/
+/* eslint-disable prefer-rest-params */
 function log() {
   defaultLogger.log.apply(defaultLogger, arguments);
 }
-/* eslint-enable prefer-rest-params*/
+/* eslint-enable prefer-rest-params */
 const hapiLogger = exports;
 
 // Predefined transports

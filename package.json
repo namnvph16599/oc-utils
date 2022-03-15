@@ -1,9 +1,33 @@
 {
-  "name": "oc-utils",
-  "version": "1.0.0",
-  "description": "utils",
-  "main": "src/index.js",
-  "author": "OC",
+  "_args": [
+    [
+      "git+https://kiennguyen07:s0Th1s1s1t!@bitbucket.org/kiennguyen07/oc-utils.git#1.6.2",
+      "/usr/src/app"
+    ]
+  ],
+  "_from": "git+https://kiennguyen07:s0Th1s1s1t!@bitbucket.org/kiennguyen07/oc-utils.git#1.6.2",
+  "_id": "oc-utils@git+https://kiennguyen07:s0Th1s1s1t!@bitbucket.org/kiennguyen07/oc-utils.git#b15f97b7c46cf720aee920b22a8fc36a16885034",
+  "_inBundle": false,
+  "_integrity": "",
+  "_location": "/oc-utils",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "git+https://kiennguyen07:s0Th1s1s1t!@bitbucket.org/kiennguyen07/oc-utils.git#1.6.2",
+    "rawSpec": "git+https://kiennguyen07:s0Th1s1s1t!@bitbucket.org/kiennguyen07/oc-utils.git#1.6.2",
+    "saveSpec": "git+https://kiennguyen07:s0Th1s1s1t!@bitbucket.org/kiennguyen07/oc-utils.git#1.6.2",
+    "fetchSpec": "https://kiennguyen07:s0Th1s1s1t!@bitbucket.org/kiennguyen07/oc-utils.git",
+    "gitCommittish": "1.6.2"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "git+https://kiennguyen07:s0Th1s1s1t!@bitbucket.org/kiennguyen07/oc-utils.git#b15f97b7c46cf720aee920b22a8fc36a16885034",
+  "_spec": "git+https://kiennguyen07:s0Th1s1s1t!@bitbucket.org/kiennguyen07/oc-utils.git#1.6.2",
+  "_where": "/usr/src/app",
+  "author": {
+    "name": "OC"
+  },
   "dependencies": {
     "@hapi/boom": "~7.4.2",
     "@hapi/inert": "~5.2.0",
@@ -14,12 +38,17 @@
     "hapi-swagger": "~10.0.2",
     "jsonwebtoken": "~8.5.1",
     "lodash": "^4.5.1",
+    "node-redis-warlock": "^0.2.0",
     "redis": "^2.8.0",
     "request": "^2.69.0",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "winston-cloudwatch": "~2.3.2"
   },
+  "description": "utils",
   "devDependencies": {
     "chai": "~3.5.0",
+    "eslint": "^6.8.0",
+    "eslint-config-oc": "git+https://anhlq2111:m24xmcgr9r@bitbucket.org/oncustomer/eslint-config.git",
     "eslint-plugin-import": "~1.16.0",
     "gulp": "~4.0.2",
     "gulp-eslint": "~5.0.0",
@@ -29,5 +58,8 @@
     "mocha": "~6.1.4",
     "mocha-jenkins-reporter": "~0.4.1",
     "sinon": "~7.3.2"
-  }
+  },
+  "main": "src/index.js",
+  "name": "oc-utils",
+  "version": "1.0.0"
 }

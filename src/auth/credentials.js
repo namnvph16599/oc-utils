@@ -1,5 +1,3 @@
-'use strict';
-
 const _ = require('lodash');
 const TokenIssuer = require('./token-issuer');
 const tokenIssuer = new TokenIssuer();
@@ -44,9 +42,19 @@ function Credentials(config) {
    */
   this.getSecret = (role, direction = 'transfer') => {
     const token = _.get(self.secrets, role);
-    return _.get(token, direction, token);
+    return _.first(_.split(_.get(token, direction, token), ','));
+  };
+
+  /**
+   *
+   * @param role
+   * @param direction
+   * @returns {*}
+   */
+  this.getSecrets = (role, direction = 'transfer') => {
+    const token = _.get(self.secrets, role);
+    return _.split(_.get(token, direction, token), ',');
   };
 }
-
 
 module.exports = Credentials;

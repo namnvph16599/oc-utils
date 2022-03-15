@@ -1,15 +1,12 @@
-'use strict';
-
 const req = require('request');
 const hapiLogger = require('./logging/hapi-logger');
 
 const Credentials = require('./auth/credentials');
 const accessRoles = require('./auth/access-roles');
 
-
 /**
  * Helper class facilitating making requests
- * @param config DistributedConfig Configuration object
+ * @param config Config Configuration object
  * @param path string            Path prepended to each subsequent request
  * @constructor
  */
@@ -34,6 +31,10 @@ Request.prototype.get = function (resource) {
  */
 Request.prototype.post = function (resource, payload, multipart = false) {
   return this._send('post', resource, payload, multipart);
+};
+
+Request.prototype.put = function (resource, payload) {
+  return this._send('put', resource, payload);
 };
 
 /**

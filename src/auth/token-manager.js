@@ -1,5 +1,3 @@
-'use strict';
-
 const Redis = require('../redis');
 const ACTOR_KEY = 'token:blacklist:actor:';
 const TOKEN_KEY = 'token:blacklist:token:';
@@ -155,7 +153,6 @@ function Manager(config) {
       }
     });
   };
-
 
   this.isTokenValidated = (token) => {
     const key = `${TOKEN_KEY}${token}`;
