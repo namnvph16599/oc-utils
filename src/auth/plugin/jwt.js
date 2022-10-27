@@ -173,7 +173,7 @@ function JWT(config) {
       await validationFunc(body, credentials, request.params, request);
       return h.continue;
     } catch (err) {
-      throw Boom.unauthorized();
+      throw Boom.unauthorized('something');
     }
   };
 
